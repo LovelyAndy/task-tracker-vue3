@@ -1,6 +1,75 @@
 <template>
-  <h1>fuck</h1>
+  <div class="container">
+    <Header
+      @toggle-add-task="showAddTask = !showAddTask"
+      :showAddTask="showAddTask"
+      title="Task Tracker"
+    />
+    <div v-if="showAddTask">
+      <AddTask @add-task="addTask" />
+    </div>
+    <Tasks @toggle-reminder="toggleReminder" @delete-task="deleteTask" :tasks="tasks" />
+  </div>
 </template>
+
+<script>
+import AddTask from './components/AddTask.vue'
+import Header from './components/Header.vue'
+import Tasks from './components/Tasks.vue'
+
+export default {
+  name: 'App',
+  components: {
+    Header,
+    Tasks,
+    AddTask,
+  },
+  data() {
+    return {
+      tasks: [],
+      showAddTask: false,
+    }
+  },
+  methods: {
+    addTask(task) {
+      this.tasks = [...this.tasks, task]
+    },
+    deleteTask(id) {
+      if (confirm('You sure you wanna delete this?')) {
+        this.tasks = this.tasks.filter((task) => task.id !== id)
+      }
+    },
+    toggleReminder(id) {
+      this.tasks = this.tasks.map((task) =>
+        task.id === id ? { ...task, reminder: !task.reminder } : task
+      )
+    },
+  },
+  created() {
+    this.tasks = [
+      {
+        id: 1,
+        text: 'Doc Appointment',
+        day: 'March 1st at 2:30pm',
+        reminder: true,
+      },
+      {
+        id: 2,
+        text: 'Shopping',
+        day: 'March 3rd at 1:30pm',
+        reminder: true,
+      },
+      {
+        id: 3,
+        text: 'Meeting at School',
+        day: 'March 3rd aat 11:00am',
+        reminder: false,
+      },
+    ]
+  },
+}
+</script>
+
 
 <style lang="sass">
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap')
@@ -34,14 +103,11 @@ body
   font-size: 15px
   font-family: inherit
 
-
   &:focus
     outline: none
 
-
   &:active
     transform: scale(0.98)
-
 
   &-block
     display: block
