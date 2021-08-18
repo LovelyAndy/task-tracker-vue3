@@ -1,4 +1,4 @@
-# task-tracker-vue3
+# task-tracker
 
 ## Project setup
 ```
